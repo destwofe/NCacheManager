@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     :tag => "0.1"
   }
 
-  s.platform     = :ios, '8.1'
+  s.platform     = :ios, '8.3'
   s.source_files = '*.{h,m}'
   s.requires_arc = true
 end
