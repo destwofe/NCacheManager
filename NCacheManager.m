@@ -10,13 +10,13 @@
 
 @implementation NCacheManager
 
-static NCacheManager *NCacheManager = nil;
+static NCacheManager *nCacheManager = nil;
 
 +(NCacheManager *)instance{
-    if (NCacheManager == nil) {
-        NCacheManager = [[NCacheManager alloc] init];
+    if (nCacheManager == nil) {
+        nCacheManager = [[NCacheManager alloc] init];
     }
-    return NCacheManager;
+    return nCacheManager;
 }
 
 -(NSData *)getImageData:(NSString *)url{
