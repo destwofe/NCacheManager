@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { "Napat Yimjan" => "destwofe@hotmail.com" }
   s.source       = { 
     :git => "https://github.com/destwofe/NCacheManager.git", 
-    :tag => "0.1"
+    :tag => "0.2"
   }
 
   s.platform     = :ios, '8.3'
