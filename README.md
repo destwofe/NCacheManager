@@ -1,0 +1,1 @@
+# NCacheManager.podspec
