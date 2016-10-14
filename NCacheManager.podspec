@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
-  s.name         = "NCacheManager.podspec"
+  s.name         = "NCacheManager"
   s.version      = "0.1"
   s.summary      = "Cache Manager for ios save cacne data to share storage."
-  s.homepage     = "https://github.com/destwofe/NCacheManager.podspec"
+  s.homepage     = "https://github.com/destwofe/NCacheManager"
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Napat Yimjan" => "destwofe@hotmail.com" }
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     :tag => "0.1"
   }
 
-  s.platform     = :ios, '8.3'
+  s.platform     = :ios, '8.1'
   s.source_files = '*.{h,m}'
   s.requires_arc = true
 end
