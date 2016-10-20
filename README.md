@@ -22,4 +22,4 @@ NSData *imageData = [NCacheManager instance]getImageData:@"http://www.google.com
 
 data will be get from server then cache to you app file system and return data to your instruction. if you have cahce data for url did you want to request you cache manager will return data to you with out connect to server.
 
-[![Donate](https://www.paypal.com/en_GB/i/btn/btn_donate_LG.gif)(https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9CQFW96YFC7EJ)]
+[![](https://www.paypal.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9CQFW96YFC7EJ)
