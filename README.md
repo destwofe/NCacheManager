@@ -10,11 +10,15 @@ NCachemanager is singleton object but need to setup share applicationGroupIdenti
 
 first setup use command
 
+```
 [[NCacheManager instance]setApplicationGroupIdentifier:@"com.ny.testCache.share"];
+```
 
 and you can cache file by command
 
+```
 NSData *imageData = [NCacheManager instance]getImageData:@"http://www.google.com/image/a.jpg"];
+```
 
 data will be get from server then cache to you app file system and return data to your instruction. if you have cahce data for url did you want to request you cache manager will return data to you with out connect to server.
 
