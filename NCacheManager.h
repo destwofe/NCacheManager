@@ -14,7 +14,9 @@
 
 @property (nonatomic,strong) NSString *applicationGroupIdentifier;
 
-//-(void)set123Identifier:(NSString *)appGroupId;
+-(NSData *)getImageDataWithName:(NSString *)name URL:(NSString *) url;
+-(NSURL *)getImageURLWithName:(NSString *)name URL:(NSString *) url;
+
 
 -(NSData *)getImageData:(NSString *)url;
 -(NSURL *) getImageURL:(NSString *)url;

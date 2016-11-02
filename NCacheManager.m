@@ -19,9 +19,33 @@ static NCacheManager *cacheManager = nil;
     return cacheManager;
 }
 
+-(NSData *)getImageDataWithName:(NSString *)name URL:(NSString *)url{
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getImageURLWithName:(NSString *)name URL:(NSString *)url{
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+    }
+    
+    return fileURL;
+}
+
 -(NSData *)getImageData:(NSString *)url{
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
@@ -34,7 +58,7 @@ static NCacheManager *cacheManager = nil;
 
 -(NSURL *)getImageURL:(NSString *)url{
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
