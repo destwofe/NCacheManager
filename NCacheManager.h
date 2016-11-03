@@ -41,4 +41,16 @@
 -(NSData *)getAudioData:(NSString *)url;
 -(NSURL *) getAudioURL:(NSString *)url;
 
+-(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
+-(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name;
+-(BOOL)saveImageData:(NSData *)data url:(NSString *)url;
+
+-(BOOL)saveVideoData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
+-(BOOL)saveVideoData:(NSData *)data url:(NSString *)url name:(NSString *)name;
+-(BOOL)saveVideoData:(NSData *)data url:(NSString *)url;
+
+-(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
+-(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name;
+-(BOOL)saveAudioData:(NSData *)data url:(NSString *)url;
+
 @end
