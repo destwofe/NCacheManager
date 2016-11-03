@@ -8,6 +8,8 @@
 
 #import "NCacheManager.h"
 
+#define DONT_WANT_CHARACTER @"/:.=&?"
+
 @implementation NCacheManager
 
 static NCacheManager *cacheManager = nil;
@@ -19,8 +21,91 @@ static NCacheManager *cacheManager = nil;
     return cacheManager;
 }
 
--(NSData *)getImageDataWithName:(NSString *)name URL:(NSString *)url{
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+-(NSData *)getImageData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
+    }
+    
+    return fileURL;
+}
+
+-(NSData *)getVideoData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
+    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
+    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
+    }
+    
+    return fileURL;
+}
+
+-(NSData *)getAudioData:(NSString *)url Name:(NSString *)name  extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
+    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
     
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
@@ -31,8 +116,117 @@ static NCacheManager *cacheManager = nil;
     return data;
 }
 
--(NSURL *)getImageURLWithName:(NSString *)name URL:(NSString *)url{
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+    if ([ext isEqualToString:@""]||ext == nil) {
+        ext = [url pathExtension];
+    }
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
+    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+    }
+    
+    return fileURL;
+}
+
+-(NSData *)getImageData:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
+    }
+    
+    return fileURL;
+}
+
+-(NSData *)getVideoData:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
+    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
+    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
+    }
+    
+    return fileURL;
+}
+
+-(NSData *)getAudioData:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
+    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+    }
+    
+    return data;
+}
+
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
+    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
     
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
@@ -44,60 +238,85 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(NSData *)getImageData:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
     }
 
     return data;
 }
 
 -(NSURL *)getImageURL:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"png";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+        [self saveData:data toURL:fileURL atContainer:[self getImageDirectory]];
     }
 
     return fileURL;
 }
 
 -(NSData *)getVideoData:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
     }
 
     return data;
 }
 
 -(NSURL *)getVideoURL:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"mp4";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getVideoDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-        [self saveData:data toURL:fileURL atContainer:[self getAudioDirectory]];
+        [self saveData:data toURL:fileURL atContainer:[self getVideoDirectory]];
     }
 
     return fileURL;
 }
 
 -(NSData *)getAudioData:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.m4a",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
@@ -109,8 +328,13 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(NSURL *)getAudioURL:(NSString *)url{
+    NSString *ext = [url pathExtension];
+    if ([ext isEqualToString:@""] || [self isExtensionFile:ext]) {
+        ext = @"m4a";
+    }
+    
     NSString *name = [self formatStringURLtoName:url];
-    NSURL *fileURL = [[self getAudioDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.m4a",name]];
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
 
     NSData *data = [NSData dataWithContentsOfURL:fileURL];
     if (!data) {
@@ -195,8 +419,13 @@ static NCacheManager *cacheManager = nil;
     return containerURL;
 }
 
+-(BOOL)isExtensionFile:(NSString *)ext{
+    NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:DONT_WANT_CHARACTER];
+    return ([ext rangeOfCharacterFromSet:doNotWant].location == NSNotFound);
+}
+
 -(NSString *)formatStringURLtoName:(NSString *)url{
-    NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"/:."];
+    NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:DONT_WANT_CHARACTER];
     NSString *name = [[url componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
     return name;
 }

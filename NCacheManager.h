@@ -14,9 +14,23 @@
 
 @property (nonatomic,strong) NSString *applicationGroupIdentifier;
 
--(NSData *)getImageDataWithName:(NSString *)name URL:(NSString *) url;
--(NSURL *)getImageURLWithName:(NSString *)name URL:(NSString *) url;
+-(NSData *)getImageData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
 
+-(NSData *)getVideoData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+
+-(NSData *)getAudioData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+
+-(NSData *)getImageData:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name;
+
+-(NSData *)getVideoData:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name;
+
+-(NSData *)getAudioData:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name;
 
 -(NSData *)getImageData:(NSString *)url;
 -(NSURL *) getImageURL:(NSString *)url;
