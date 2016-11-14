@@ -615,6 +615,14 @@ static NCacheManager *cacheManager = nil;
     return nil;
 }
 
+-(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets{
+    NSMutableArray *names = [[NSMutableArray alloc]init];
+    for (PHAsset *asset in assets) {
+        [names addObject:[self saveFileFromAsset:asset]];
+    }
+    return [NSArray arrayWithArray:names];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 
