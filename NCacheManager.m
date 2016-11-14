@@ -666,6 +666,9 @@ static NCacheManager *cacheManager = nil;
     for (NSURL *fileName in fileNameList) {
 
         NSDate *modificationDate = [[NSFileManager defaultManager]attributesOfItemAtPath:[fileName path] error:nil].fileModificationDate;
+        if (!modificationDate) {
+            modificationDate = [NSDate date];
+        }
         [fileDict setValue:fileName forKey:modificationDate.description];
     }
 
