@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Photos/Photos.h>
+
+#import "NUtils.h"
 
 @interface NCacheManager : NSObject
 
@@ -52,5 +55,29 @@
 -(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
 -(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name;
 -(BOOL)saveAudioData:(NSData *)data url:(NSString *)url;
+
+-(BOOL)removeImageWithName:(NSString *)name extension:(NSString *)ext;
+-(BOOL)removeImageWithName:(NSString *)name;
+-(BOOL)removeImageWithURL:(NSString *)url;
+
+-(BOOL)removeAudioWithName:(NSString *)name extension:(NSString *)ext;
+-(BOOL)removeAudioWithName:(NSString *)name;
+-(BOOL)removeAudioWithURL:(NSString *)url;
+
+-(BOOL)removeVideoWithName:(NSString *)name extension:(NSString *)ext;
+-(BOOL)removeVideoWithName:(NSString *)name;
+-(BOOL)removeVideoWithURL:(NSString *)url;
+
+-(BOOL)renameImage:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
+-(BOOL)renameImage:(NSString *)name newName:(NSString *)newName;
+
+-(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
+-(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName;
+
+-(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
+-(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName;
+
+-(NSString *)saveFileFromAsset:(PHAsset *)asset;
+-(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)asset;
 
 @end
