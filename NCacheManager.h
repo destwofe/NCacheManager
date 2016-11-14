@@ -78,6 +78,6 @@
 -(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName;
 
 -(NSString *)saveFileFromAsset:(PHAsset *)asset;
--(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)asset;
+-(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets;
 
 @end
