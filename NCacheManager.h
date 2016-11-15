@@ -15,34 +15,40 @@
 
 +(NCacheManager *)instance;
 
+typedef enum {
+    NCacheTypeImage,
+    NCacheTypeVideo,
+    NCacheTypeAudio
+} NCacheType;
+
 @property (nonatomic,strong) NSString *applicationGroupIdentifier;
+@property (nonatomic,strong) NSNumber *maxImage;
+@property (nonatomic,strong) NSNumber *maxVideo;
+@property (nonatomic,strong) NSNumber *maxAudio;
 
 -(NSData *)getImageData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSData *)getImageData:(NSString *)url Name:(NSString *)name;
+-(NSData *)getImageData:(NSString *)url;
+
 -(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getImageURL:(NSString *)url;
 
 -(NSData *)getVideoData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSData *)getVideoData:(NSString *)url Name:(NSString *)name;
+-(NSData *)getVideoData:(NSString *)url;
+
 -(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getVideoURL:(NSString *)url;
 
 -(NSData *)getAudioData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
-
--(NSData *)getImageData:(NSString *)url Name:(NSString *)name;
--(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name;
-
--(NSData *)getVideoData:(NSString *)url Name:(NSString *)name;
--(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name;
-
 -(NSData *)getAudioData:(NSString *)url Name:(NSString *)name;
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name;
-
--(NSData *)getImageData:(NSString *)url;
--(NSURL *) getImageURL:(NSString *)url;
-
--(NSData *)getVideoData:(NSString *)url;
--(NSURL *) getVideoURL:(NSString *)url;
-
 -(NSData *)getAudioData:(NSString *)url;
--(NSURL *) getAudioURL:(NSString *)url;
+
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
+-(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name;
+-(NSURL *)getAudioURL:(NSString *)url;
 
 -(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
 -(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name;

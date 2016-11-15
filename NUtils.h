@@ -13,5 +13,6 @@
 
 +(NSData *)getImageDataFromAsset:(PHAsset *)asset;
 +(NSMutableArray *)getImageDataFromAssets:(NSMutableArray *)assets;
++(void)fetchVideoFromAsset:(PHAsset *)asset toURL:(NSURL *)url  completion:(void (^)(void))completion;
 
 @end
