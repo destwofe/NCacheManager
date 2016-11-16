@@ -397,7 +397,7 @@ static NCacheManager *cacheManager = nil;
     return [self renameAudio:name newName:newName extension:@""];
 }
 
--(NSString *)saveFileFromAsset:(PHAsset *)asset{
+-(NSURL *)saveFileFromAsset:(PHAsset *)asset{
     switch (asset.mediaType) {
         case PHAssetMediaTypeImage:{
             NSData *imageData = [NUtils getImageDataFromAsset:asset];
@@ -405,7 +405,7 @@ static NCacheManager *cacheManager = nil;
             NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
             
             [self saveData:imageData nameWithExtension:orgFilename type:NCacheTypeImage];
-            return orgFilename;
+            return [self generateFileURL:orgFilename type:NCacheTypeImage];
         }break;
         case PHAssetMediaTypeVideo:{
             NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
@@ -420,7 +420,7 @@ static NCacheManager *cacheManager = nil;
             }];
             dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
             
-            return orgFilename;
+            return [self generateFileURL:orgFilename type:NCacheTypeVideo];
         }break;
         case PHAssetMediaTypeAudio:{
             
@@ -433,12 +433,12 @@ static NCacheManager *cacheManager = nil;
     return nil;
 }
 
--(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets{
-    NSMutableArray *names = [[NSMutableArray alloc]init];
+-(NSArray<NSURL *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets{
+    NSMutableArray *urls = [[NSMutableArray alloc]init];
     for (PHAsset *asset in assets) {
-        [names addObject:[self saveFileFromAsset:asset]];
+        [urls addObject:[self saveFileFromAsset:asset]];
     }
-    return [NSArray arrayWithArray:names];
+    return [NSArray arrayWithArray:urls];
 }
 
 

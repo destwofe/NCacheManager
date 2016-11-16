@@ -83,7 +83,7 @@ typedef enum {
 -(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
 -(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName;
 
--(NSString *)saveFileFromAsset:(PHAsset *)asset;
--(NSArray<NSString *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets;
+-(NSURL *)saveFileFromAsset:(PHAsset *)asset;
+-(NSArray<NSURL *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets;
 
 @end
