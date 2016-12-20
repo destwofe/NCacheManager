@@ -10,80 +10,80 @@
 #import <Photos/Photos.h>
 
 #import "NUtils.h"
+#import "NFileDataModel.h"
 
 @interface NCacheManager : NSObject
 
-+(NCacheManager *)instance;
++(NCacheManager * _Nonnull)instance;
 
-typedef enum {
-    NCacheTypeImage,
-    NCacheTypeVideo,
-    NCacheTypeAudio
-} NCacheType;
+@property (nonatomic,strong) NSString * _Nonnull applicationGroupIdentifier;
+@property (nonatomic,strong) NSNumber * _Nonnull maxImage;
+@property (nonatomic,strong) NSNumber * _Nonnull maxVideo;
+@property (nonatomic,strong) NSNumber * _Nonnull maxAudio;
+@property (nonatomic,strong) NSNumber * _Nonnull maxFile;
 
-@property (nonatomic,strong) NSString *applicationGroupIdentifier;
-@property (nonatomic,strong) NSNumber *maxImage;
-@property (nonatomic,strong) NSNumber *maxVideo;
-@property (nonatomic,strong) NSNumber *maxAudio;
+-(NSArray<NSString *> * _Nonnull)getFileList:(NCacheType)type;
 
--(NSData *)getImageData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSData *)getImageData:(NSString *)url Name:(NSString *)name;
--(NSData *)getImageData:(NSString *)url;
+-(NFileDataModel * _Nonnull)getCachedFrom:(NSString * _Nonnull)path type:(NCacheType)type;
 
--(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name;
--(NSURL *)getImageURL:(NSString *)url;
+-(NSData * _Nonnull)getImageData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSData * _Nonnull)getImageData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSData * _Nonnull)getImageData:(NSString * _Nonnull)url;
 
--(NSData *)getVideoData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSData *)getVideoData:(NSString *)url Name:(NSString *)name;
--(NSData *)getVideoData:(NSString *)url;
+-(NSURL * _Nonnull)getImageURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSURL * _Nonnull)getImageURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSURL * _Nonnull)getImageURL:(NSString * _Nonnull)url;
 
--(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name;
--(NSURL *)getVideoURL:(NSString *)url;
+-(NSData * _Nonnull)getVideoData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSData * _Nonnull)getVideoData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSData * _Nonnull)getVideoData:(NSString * _Nonnull)url;
 
--(NSData *)getAudioData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSData *)getAudioData:(NSString *)url Name:(NSString *)name;
--(NSData *)getAudioData:(NSString *)url;
+-(NSURL * _Nonnull)getVideoURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSURL * _Nonnull)getVideoURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSURL * _Nonnull)getVideoURL:(NSString * _Nonnull)url;
 
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext;
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name;
--(NSURL *)getAudioURL:(NSString *)url;
+-(NSData * _Nonnull)getAudioData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSData * _Nonnull)getAudioData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSData * _Nonnull)getAudioData:(NSString * _Nonnull)url;
 
--(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
--(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name;
--(BOOL)saveImageData:(NSData *)data url:(NSString *)url;
+-(NSURL * _Nonnull)getAudioURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(NSURL * _Nonnull)getAudioURL:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(NSURL * _Nonnull)getAudioURL:(NSString * _Nonnull)url;
 
--(BOOL)saveVideoData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
--(BOOL)saveVideoData:(NSData *)data url:(NSString *)url name:(NSString *)name;
--(BOOL)saveVideoData:(NSData *)data url:(NSString *)url;
+-(BOOL)saveImageData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)saveImageData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(BOOL)saveImageData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url;
 
--(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext;
--(BOOL)saveAudioData:(NSData *)data url:(NSString *)url name:(NSString *)name;
--(BOOL)saveAudioData:(NSData *)data url:(NSString *)url;
+-(BOOL)saveVideoData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)saveVideoData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(BOOL)saveVideoData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url;
 
--(BOOL)removeImageWithName:(NSString *)name extension:(NSString *)ext;
--(BOOL)removeImageWithName:(NSString *)name;
--(BOOL)removeImageWithURL:(NSString *)url;
+-(BOOL)saveAudioData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)saveAudioData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
+-(BOOL)saveAudioData:(NSData * _Nonnull)data url:(NSString * _Nonnull)url;
 
--(BOOL)removeAudioWithName:(NSString *)name extension:(NSString *)ext;
--(BOOL)removeAudioWithName:(NSString *)name;
--(BOOL)removeAudioWithURL:(NSString *)url;
+-(BOOL)removeImageWithname:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)removeImageWithname:(NSString * _Nonnull)name;
+-(BOOL)removeImageWithURL:(NSString * _Nonnull)url;
 
--(BOOL)removeVideoWithName:(NSString *)name extension:(NSString *)ext;
--(BOOL)removeVideoWithName:(NSString *)name;
--(BOOL)removeVideoWithURL:(NSString *)url;
+-(BOOL)removeAudioWithname:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)removeAudioWithname:(NSString * _Nonnull)name;
+-(BOOL)removeAudioWithURL:(NSString * _Nonnull)url;
 
--(BOOL)renameImage:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
--(BOOL)renameImage:(NSString *)name newName:(NSString *)newName;
+-(BOOL)removeVideoWithname:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
+-(BOOL)removeVideoWithname:(NSString * _Nonnull)name;
+-(BOOL)removeVideoWithURL:(NSString * _Nonnull)url;
 
--(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
--(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName;
+-(BOOL)renameImage:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname extension:(NSString * _Nonnull)ext;
+-(BOOL)renameImage:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname;
 
--(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext;
--(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName;
+-(BOOL)renameAudio:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname extension:(NSString * _Nonnull)ext;
+-(BOOL)renameAudio:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname;
 
--(NSURL *)saveFileFromAsset:(PHAsset *)asset;
--(NSArray<NSURL *> *)saveFileFromAssets:(NSArray<PHAsset *> *)assets;
+-(BOOL)renameVideo:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname extension:(NSString * _Nonnull)ext;
+-(BOOL)renameVideo:(NSString * _Nonnull)name newname:(NSString * _Nonnull)newname;
+
+-(NSURL * _Nonnull)saveFileFromAsset:(PHAsset * _Nonnull)asset;
+-(NSArray<NSURL *> * _Nonnull)saveFileFromAssets:(NSArray<PHAsset *> * _Nonnull)assets;
 
 @end

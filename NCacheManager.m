@@ -27,197 +27,229 @@ static NCacheManager *cacheManager = nil;
         self.maxImage = [NSNumber numberWithInt:100];
         self.maxVideo = [NSNumber numberWithInt:20];
         self.maxAudio = [NSNumber numberWithInt:40];
+        self.maxFile  = [NSNumber numberWithInt:100];
     }
     return self;
 }
 
--(NSData *)getImageData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSArray<NSString *> * _Nonnull)getFileList:(NCacheType)type{
+    NSString *path = [self getContainer:type].path;
+    return [self getDirectoryInformation:path];
+}
+
+-(NFileDataModel *)getCachedFrom:(NSString *)path type:(NCacheType)type{
+    if (path == nil) {
+        path = @"";
+    }
+    NSString *name = [self formatStringURLtoname:path];
+    NSString *ext = [self validateExtension:@"" url:path type:type];
+    
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
+    if (!data) {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:path]];
+        if (data) {
+            [self saveData:data nameWithExtension:filename type:type];
+        }else{
+            return nil;
+        }
+    }
+    
+    NSURL *fileURL = [[NSURL alloc]initWithString:filename];
+    NSDictionary<NSFileAttributeKey,id> *fileAttri = [[NSFileManager defaultManager]attributesOfItemAtPath:[fileURL path] error:nil];
+    
+    NFileDataModel *nFileDataModel = [[NFileDataModel alloc]initWithPath:path name:name extension:ext fileURL:fileURL createDate:fileAttri.fileCreationDate updateDate:fileAttri.fileModificationDate size:[NSNumber numberWithLong:(long)fileAttri.fileSize] data:data type:type];
+    
+    return nFileDataModel;
+}
+
+-(NSData *)getImageData:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeImage;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
         }
     }
     return data;
 }
 
--(NSData *)getImageData:(NSString *)url Name:(NSString *)name{
+-(NSData *)getImageData:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getImageData:url Name:name extension:ext];
+    return [self getImageData:url name:name extension:ext];
 }
 
 -(NSData *)getImageData:(NSString *)url{
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     NSString *ext = @"";
-    return [self getImageData:url Name:name extension:ext];
+    return [self getImageData:url name:name extension:ext];
 }
 
--(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSURL *)getImageURL:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeImage;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
-            return [self generateFileURL:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
+            return [self generateFileURL:filename type:type];
         }
     }
     return nil;
 }
 
--(NSURL *)getImageURL:(NSString *)url Name:(NSString *)name{
+-(NSURL *)getImageURL:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getImageURL:url Name:name extension:ext];
+    return [self getImageURL:url name:name extension:ext];
 }
 
 -(NSURL *)getImageURL:(NSString *)url{
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     NSString *ext = @"";
-    return [self getImageURL:url Name:name extension:ext];
+    return [self getImageURL:url name:name extension:ext];
 }
 
--(NSData *)getVideoData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSData *)getVideoData:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeVideo;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
         }
     }
     return data;
 }
 
--(NSData *)getVideoData:(NSString *)url Name:(NSString *)name{
+-(NSData *)getVideoData:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getVideoData:url Name:name extension:ext];
+    return [self getVideoData:url name:name extension:ext];
 }
 
 -(NSData *)getVideoData:(NSString *)url{
     NSString *ext = @"";
-    NSString *name = [self formatStringURLtoName:url];
-    return [self getVideoData:url Name:name extension:ext];
+    NSString *name = [self formatStringURLtoname:url];
+    return [self getVideoData:url name:name extension:ext];
 }
 
--(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSURL *)getVideoURL:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeVideo;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
-            return [self generateFileURL:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
+            return [self generateFileURL:filename type:type];
         }
     }
     return nil;
 }
 
--(NSURL *)getVideoURL:(NSString *)url Name:(NSString *)name{
+-(NSURL *)getVideoURL:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getVideoURL:url Name:name extension:ext];
+    return [self getVideoURL:url name:name extension:ext];
 }
 
 -(NSURL *)getVideoURL:(NSString *)url{
     NSString *ext = @"";
-    NSString *name = [self formatStringURLtoName:url];
-    return [self getVideoURL:url Name:name extension:ext];
+    NSString *name = [self formatStringURLtoname:url];
+    return [self getVideoURL:url name:name extension:ext];
 }
 
--(NSData *)getAudioData:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSData *)getAudioData:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeAudio;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
         }
     }
     return data;
 }
 
--(NSData *)getAudioData:(NSString *)url Name:(NSString *)name{
+-(NSData *)getAudioData:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getAudioData:url Name:name extension:ext];
+    return [self getAudioData:url name:name extension:ext];
 }
 
 -(NSData *)getAudioData:(NSString *)url{
     NSString *ext = @"";
-    NSString *name = [self formatStringURLtoName:url];
-    return [self getAudioData:url Name:name extension:ext];
+    NSString *name = [self formatStringURLtoname:url];
+    return [self getAudioData:url name:name extension:ext];
 }
 
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name extension:(NSString *)ext{
+-(NSURL *)getAudioURL:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeAudio;
     if (url == nil) {
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
-    NSData *data = [self getDataFromFileNameWithExtension:fileName type:type];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         if (data) {
-            [self saveData:data nameWithExtension:fileName type:type];
-            return [self generateFileURL:fileName type:type];
+            [self saveData:data nameWithExtension:filename type:type];
+            return [self generateFileURL:filename type:type];
         }
     }
     return nil;
 }
 
--(NSURL *)getAudioURL:(NSString *)url Name:(NSString *)name{
+-(NSURL *)getAudioURL:(NSString *)url name:(NSString *)name{
     NSString *ext = @"";
-    return [self getAudioURL:url Name:name extension:ext];
+    return [self getAudioURL:url name:name extension:ext];
 }
 
 -(NSURL *)getAudioURL:(NSString *)url{
     NSString *ext = @"";
-    NSString *name = [self formatStringURLtoName:url];
-    return [self getAudioURL:url Name:name extension:ext];
+    NSString *name = [self formatStringURLtoname:url];
+    return [self getAudioURL:url name:name extension:ext];
 }
 
 -(BOOL)saveImageData:(NSData *)data url:(NSString *)url name:(NSString *)name extension:(NSString *)ext{
@@ -227,12 +259,12 @@ static NCacheManager *cacheManager = nil;
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
     
-    return [self saveData:data nameWithExtension:fileName type:type];
+    return [self saveData:data nameWithExtension:filename type:type];
 }
 
 
@@ -242,7 +274,7 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(BOOL)saveImageData:(NSData *)data url:(NSString *)url{
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     NSString *ext = @"";
     return [self saveImageData:data url:url name:name extension:ext];
 }
@@ -254,12 +286,12 @@ static NCacheManager *cacheManager = nil;
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
     
-    return [self saveData:data nameWithExtension:fileName type:type];
+    return [self saveData:data nameWithExtension:filename type:type];
 }
 
 
@@ -269,7 +301,7 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(BOOL)saveVideoData:(NSData *)data url:(NSString *)url{
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     NSString *ext = @"";
     return [self saveVideoData:data url:url name:name extension:ext];
 }
@@ -281,12 +313,12 @@ static NCacheManager *cacheManager = nil;
         url = @"";
     }
     if (name == nil || [name isEqualToString:@""]) {
-        name = [self formatStringURLtoName:url];
+        name = [self formatStringURLtoname:url];
     }
     ext = [self validateExtension:ext url:url type:type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
     
-    return [self saveData:data nameWithExtension:fileName type:type];
+    return [self saveData:data nameWithExtension:filename type:type];
 }
 
 
@@ -296,12 +328,12 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(BOOL)saveAudioData:(NSData *)data url:(NSString *)url{
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     NSString *ext = @"";
     return [self saveAudioData:data url:url name:name extension:ext];
 }
 
--(BOOL)removeImageWithName:(NSString *)name extension:(NSString *)ext{
+-(BOOL)removeImageWithname:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeImage;
     ext = [self validateExtension:ext url:@"" type:type];
     if (name == nil || [name isEqualToString:@""]) {
@@ -311,19 +343,19 @@ static NCacheManager *cacheManager = nil;
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)removeImageWithName:(NSString *)name{
-    return [self removeImageWithName:name extension:@""];
+-(BOOL)removeImageWithname:(NSString *)name{
+    return [self removeImageWithname:name extension:@""];
 }
 
 -(BOOL)removeImageWithURL:(NSString *)url{
     NCacheType type = NCacheTypeImage;
     NSString *ext = [self validateExtension:@"" url:url type:type];
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)removeVideoWithName:(NSString *)name extension:(NSString *)ext{
+-(BOOL)removeVideoWithname:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeVideo;
     ext = [self validateExtension:ext url:@"" type:type];
     if (name == nil || [name isEqualToString:@""]) {
@@ -333,19 +365,19 @@ static NCacheManager *cacheManager = nil;
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)removeVideoWithName:(NSString *)name{
-    return [self removeImageWithName:name extension:@""];
+-(BOOL)removeVideoWithname:(NSString *)name{
+    return [self removeImageWithname:name extension:@""];
 }
 
 -(BOOL)removeVideoWithURL:(NSString *)url{
     NCacheType type = NCacheTypeVideo;
     NSString *ext = [self validateExtension:@"" url:url type:type];
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)removeAudioWithName:(NSString *)name extension:(NSString *)ext{
+-(BOOL)removeAudioWithname:(NSString *)name extension:(NSString *)ext{
     NCacheType type = NCacheTypeAudio;
     ext = [self validateExtension:ext url:@"" type:type];
     if (name == nil || [name isEqualToString:@""]) {
@@ -355,46 +387,46 @@ static NCacheManager *cacheManager = nil;
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)removeAudioWithName:(NSString *)name{
-    return [self removeImageWithName:name extension:@""];
+-(BOOL)removeAudioWithname:(NSString *)name{
+    return [self removeImageWithname:name extension:@""];
 }
 
 -(BOOL)removeAudioWithURL:(NSString *)url{
     NCacheType type = NCacheTypeAudio;
     NSString *ext = [self validateExtension:@"" url:url type:type];
-    NSString *name = [self formatStringURLtoName:url];
+    NSString *name = [self formatStringURLtoname:url];
     
     return [self removeFile:name extension:ext type:type];
 }
 
--(BOOL)renameImage:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext{
+-(BOOL)renameImage:(NSString *)name newname:(NSString *)newname extension:(NSString *)ext{
     NCacheType type = NCacheTypeImage;
     ext = [self validateExtension:ext url:@"" type:type];
-    return [self renameFile:name newName:newName extension:ext type:type];
+    return [self renameFile:name newname:newname extension:ext type:type];
 }
 
--(BOOL)renameImage:(NSString *)name newName:(NSString *)newName{
-    return [self renameImage:name newName:newName extension:@""];
+-(BOOL)renameImage:(NSString *)name newname:(NSString *)newname{
+    return [self renameImage:name newname:newname extension:@""];
 }
 
--(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext{
+-(BOOL)renameVideo:(NSString *)name newname:(NSString *)newname extension:(NSString *)ext{
     NCacheType type = NCacheTypeVideo;
     ext = [self validateExtension:ext url:@"" type:type];
-    return [self renameFile:name newName:newName extension:ext type:type];
+    return [self renameFile:name newname:newname extension:ext type:type];
 }
 
--(BOOL)renameVideo:(NSString *)name newName:(NSString *)newName{
-    return [self renameVideo:name newName:newName extension:@""];
+-(BOOL)renameVideo:(NSString *)name newname:(NSString *)newname{
+    return [self renameVideo:name newname:newname extension:@""];
 }
 
--(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext{
+-(BOOL)renameAudio:(NSString *)name newname:(NSString *)newname extension:(NSString *)ext{
     NCacheType type = NCacheTypeAudio;
     ext = [self validateExtension:ext url:@"" type:type];
-    return [self renameFile:name newName:newName extension:ext type:type];
+    return [self renameFile:name newname:newname extension:ext type:type];
 }
 
--(BOOL)renameAudio:(NSString *)name newName:(NSString *)newName{
-    return [self renameAudio:name newName:newName extension:@""];
+-(BOOL)renameAudio:(NSString *)name newname:(NSString *)newname{
+    return [self renameAudio:name newname:newname extension:@""];
 }
 
 -(NSURL *)saveFileFromAsset:(PHAsset *)asset{
@@ -444,12 +476,12 @@ static NCacheManager *cacheManager = nil;
 
 ////////////////////////////////////////////////////////////////////////////////////
 
--(BOOL)renameFile:(NSString *)name newName:(NSString *)newName extension:(NSString *)ext type:(NCacheType)type{
+-(BOOL)renameFile:(NSString *)name newname:(NSString *)newname extension:(NSString *)ext type:(NCacheType)type{
     
     NSURL *container = [self getContainer:type];
     
-    NSArray *fileNameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:container includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
-    for (NSURL *fileURL in fileNameList) {
+    NSArray *filenameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:container includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+    for (NSURL *fileURL in filenameList) {
         NSString *filename = fileURL.lastPathComponent;
         if ([filename isEqualToString:[NSString stringWithFormat:@"%@.%@",name,ext]]) {
             NSData *data = [NSData dataWithContentsOfURL:fileURL];
@@ -480,7 +512,7 @@ static NCacheManager *cacheManager = nil;
                 ext = @"m4a";
             }break;
             default:{
-                return nil;
+                return @"";
             }break;
         }
     }
@@ -488,7 +520,7 @@ static NCacheManager *cacheManager = nil;
     return ext;
 }
 
--(NSData *)getDataFromFileNameWithExtension:(NSString *)name type:(NCacheType)type{
+-(NSData *)getDataFromFilenameWithExtension:(NSString *)name type:(NCacheType)type{
     NSURL *container;
     NSURL *fileURL;
     
@@ -527,7 +559,7 @@ static NCacheManager *cacheManager = nil;
             container = [self getAudioDirectory];
         }break;
         default:{
-            return nil;
+            container = [self getFileDirectory];
         }break;
     }
     
@@ -541,20 +573,18 @@ static NCacheManager *cacheManager = nil;
     switch (type) {
         case NCacheTypeImage:{
             container = [self getImageDirectory];
-            fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
         }break;
         case NCacheTypeVideo:{
             container = [self getVideoDirectory];
-            fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
         }break;
         case NCacheTypeAudio:{
             container = [self getAudioDirectory];
-            fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
         }break;
         default:{
-            return false;
+            container = [self getFileDirectory];
         }break;
     }
+    fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
     
     return fileURL;
 }
@@ -573,7 +603,7 @@ static NCacheManager *cacheManager = nil;
             limit = self.maxAudio.intValue;
         }break;
         default:{
-            return 0;
+            limit = self.maxFile.intValue;
         }break;
     }
     
@@ -608,16 +638,16 @@ static NCacheManager *cacheManager = nil;
 
     NSLog(@"%@",containerURL.absoluteString);
 
-    NSArray *fileNameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:containerURL includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+    NSArray *filenameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:containerURL includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
     NSMutableDictionary *fileDict = [[NSMutableDictionary alloc]init];
 
-    for (NSURL *fileName in fileNameList) {
+    for (NSURL *filename in filenameList) {
 
-        NSDate *modificationDate = [[NSFileManager defaultManager]attributesOfItemAtPath:[fileName path] error:nil].fileModificationDate;
+        NSDate *modificationDate = [[NSFileManager defaultManager]attributesOfItemAtPath:[filename path] error:nil].fileModificationDate;
         if (!modificationDate) {
             modificationDate = [NSDate date];
         }
-        [fileDict setValue:fileName forKey:modificationDate.description];
+        [fileDict setValue:filename forKey:modificationDate.description];
     }
 
     while ([[fileDict allKeys]count] > limit) {
@@ -632,7 +662,7 @@ static NCacheManager *cacheManager = nil;
         [fileDict removeObjectForKey:[sorted objectAtIndex:0]];
     }
 
-    fileNameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:containerURL includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+    filenameList = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:containerURL includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
 }
 
 -(NSURL *)getVideoDirectory{
@@ -671,20 +701,32 @@ static NCacheManager *cacheManager = nil;
     return containerURL;
 }
 
+-(NSURL *)getFileDirectory{
+    NSURL *containerURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:self.applicationGroupIdentifier];
+    containerURL = [containerURL URLByAppendingPathComponent:[NSString stringWithFormat:@"Library/Caches/FileCache"]];
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:[containerURL path]
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:nil];
+    
+    return containerURL;
+}
+
 -(BOOL)isExtensionFile:(NSString *)ext{
     NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:DONT_WANT_CHARACTER];
     return ([ext rangeOfCharacterFromSet:doNotWant].location == NSNotFound);
 }
 
--(NSString *)formatStringURLtoName:(NSString *)url{
+-(NSString *)formatStringURLtoname:(NSString *)url{
     NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:DONT_WANT_CHARACTER];
     NSString *name = [[url componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
     return name;
 }
 
--(void)getDirectoryInformation:(NSString *)directoryPath{
+-(NSArray*)getDirectoryInformation:(NSString *)directoryPath{
     NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:Nil];
-    NSLog(@"%@",dirs.description);
+    return dirs;
 }
 
 @end
