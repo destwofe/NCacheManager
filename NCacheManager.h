@@ -25,6 +25,7 @@
 -(NSArray<NSString *> * _Nonnull)getFileList:(NCacheType)type;
 
 -(NFileDataModel * _Nonnull)getCachedFrom:(NSString * _Nonnull)path type:(NCacheType)type;
+-(BOOL)saveData:(NSData * _Nonnull)data nameWithExtension:(NSString * _Nonnull)name type:(NCacheType)type;
 
 -(NSData * _Nonnull)getImageData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name extension:(NSString * _Nonnull)ext;
 -(NSData * _Nonnull)getImageData:(NSString * _Nonnull)url name:(NSString * _Nonnull)name;
