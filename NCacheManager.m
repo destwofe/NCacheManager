@@ -627,6 +627,13 @@ static NCacheManager *cacheManager = nil;
     return false;
 }
 
+-(BOOL)removeFileNameWithExtension:(NSString * _Nonnull)name type:(NCacheType)type{
+    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    return [manager removeItemAtPath:fileURL.path error:nil];
+}
+
 -(BOOL)removeFile:(NSString*)name extension:(NSString *)ext type:(NCacheType)type{
     NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
     
