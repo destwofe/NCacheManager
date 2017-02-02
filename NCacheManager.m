@@ -537,6 +537,10 @@ static NCacheManager *cacheManager = nil;
             container = [self getAudioDirectory];
             fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
         }break;
+        case NCacheTypeUnknow:{
+            container = [self getFileDirectory];
+            fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+        }
         default:{
             return false;
         }break;
