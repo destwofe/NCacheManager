@@ -41,10 +41,17 @@ static NCacheManager *cacheManager = nil;
     if (path == nil) {
         path = @"";
     }
-    NSString *name = [self formatStringURLtoname:path];
-    NSString *ext = [self validateExtension:@"" url:path type:type];
+    NSString *name;
+    NSString *ext;
+    NSString *filename;
+    if (type != NCacheTypeUnknow) {
+        name = [self formatStringURLtoname:path];
+        ext = [self validateExtension:@"" url:path type:type];
+        filename = [NSString stringWithFormat:@"%@.%@",name,ext];
+    }else{
+        filename = path;
+    }
     
-    NSString *filename = [NSString stringWithFormat:@"%@.%@",name,ext];
     NSData *data = [self getDataFromFilenameWithExtension:filename type:type];
     if (!data) {
         data = [NSData dataWithContentsOfURL:[NSURL URLWithString:path]];
@@ -540,7 +547,7 @@ static NCacheManager *cacheManager = nil;
         case NCacheTypeUnknow:{
             container = [self getFileDirectory];
             fileURL = [container URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
-        }
+        }break;
         default:{
             return false;
         }break;
@@ -632,14 +639,14 @@ static NCacheManager *cacheManager = nil;
 }
 
 -(BOOL)removeFileNameWithExtension:(NSString * _Nonnull)name type:(NCacheType)type{
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
+    NSURL *fileURL = [[self getContainer:type] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     return [manager removeItemAtPath:fileURL.path error:nil];
 }
 
 -(BOOL)removeFile:(NSString*)name extension:(NSString *)ext type:(NCacheType)type{
-    NSURL *fileURL = [[self getImageDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
+    NSURL *fileURL = [[self getContainer:type] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     return [manager removeItemAtPath:fileURL.path error:nil];
